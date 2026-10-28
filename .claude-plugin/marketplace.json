@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "devdigest-ai",
+  "description": "Claude Code plugins from DevDigest AI",
+  "owner": {
+    "name": "PalkoNazar",
+    "url": "https://github.com/PalkoNazar"
+  },
+  "plugins": [
+    {
+      "name": "hello-world",
+      "source": "./plugins/hello-world",
+      "description": "Example plugin with a single greeting skill",
+      "category": "examples",
+      "tags": [
+        "example",
+        "starter"
+      ]
+    }
+  ]
+}

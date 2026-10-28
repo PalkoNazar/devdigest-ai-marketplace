@@ -1,0 +1,51 @@
+name: Validate plugins
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Claude Code
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Validate each plugin
+        run: |
+          for dir in plugins/*/; do
+            echo "::group::$dir"
+            claude plugin validate "$dir" --strict
+            echo "::endgroup::"
+          done
+
+      - name: Validate marketplace
+        run: claude plugin validate . --strict
+
+      - name: Check entry names match plugin.json
+        run: |
+          jq -r '.plugins[] | select(.source | type == "string") | "\(.name) \(.source)"' \
+            .claude-plugin/marketplace.json |
+          while read -r name src; do
+            manifest="${src%/}/.claude-plugin/plugin.json"
+            actual=$(jq -r .name "$manifest")
+            if [ "$name" != "$actual" ]; then
+              echo "::error::Entry '$name' does not match name '$actual' in $manifest"
+              exit 1
+            fi
+          done
+
+      - name: Check entries are sorted and unique
+        run: |
+          names=$(jq -r '.plugins[].name' .claude-plugin/marketplace.json)
+          if [ "$names" != "$(echo "$names" | sort -u)" ]; then
+            echo "::error::Plugin entries must be sorted by name and unique"
+            exit 1
+          fi

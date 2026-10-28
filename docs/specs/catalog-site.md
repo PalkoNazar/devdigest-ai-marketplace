@@ -1,6 +1,6 @@
 # Spec: DevDigest AI catalog site
 
-Status: Draft
+Status: Implemented in `site/` (see §15 for where it differs)
 Scope: MVP + settings generator + trust panel
 
 ## 1. Goal
@@ -459,3 +459,18 @@ on the repository's `plugins/` and `.claude-plugin/`.
 - **Q3. Custom domain** instead of `palkonazar.github.io/devdigest-ai-marketplace`.
 - **Q4. Category taxonomy.** Free-form today; a fixed list would make the category filter
   more useful.
+
+## 15. Implementation notes
+
+Where `site/` differs from this spec:
+
+- **No separate extractor step.** Astro calls `buildCatalog()` from `src/lib/catalog.ts`
+  while it builds, instead of a `build-catalog.ts` script writing `catalog.json` first.
+  `index.json` is still published.
+- **Category is a filter only.** It isn't a search field (§5.1): matching it returned every
+  artifact of a plugin for any word in its category.
+- **Artifact URLs use the id's last segment**, not the name, so two hooks on the same
+  event get separate pages.
+- **Deploy is gated** on the repository variable `PAGES_ENABLED`, so `main` stays green
+  until Pages is enabled.
+- **Smoke tests** (§11) were run locally with a headless browser; they aren't in CI yet.

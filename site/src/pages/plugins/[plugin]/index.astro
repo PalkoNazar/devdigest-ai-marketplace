@@ -1,0 +1,87 @@
+---
+import Base from '../../../layouts/Base.astro';
+import InstallBlock from '../../../components/InstallBlock.astro';
+import TrustBadge from '../../../components/TrustBadge.astro';
+import TrustPanel from '../../../components/TrustPanel.astro';
+import Icon from '../../../components/Icon.astro';
+import { artifactById, artifactUrl, blobUrl, catalog, url } from '../../../data.ts';
+import type { Plugin } from '../../../lib/catalog.ts';
+
+export function getStaticPaths() {
+  return catalog.plugins.map((plugin) => ({ params: { plugin: plugin.name }, props: { plugin } }));
+}
+const { plugin } = Astro.props as { plugin: Plugin };
+const artifacts = plugin.artifactIds.map((id) => artifactById.get(id)!);
+const groups = [
+  ['skill', 'Skills'], ['agent', 'Agents'], ['command', 'Commands'],
+  ['hook', 'Hooks'], ['mcp', 'MCP servers'], ['monitor', 'Monitors'],
+].map(([type, label]) => ({ label, items: artifacts.filter((a) => a.type === type) })).filter((g) => g.items.length > 0);
+const metadataMode = catalog.publishContent === 'metadata';
+---
+<Base title={plugin.displayName ?? plugin.name} description={plugin.description}>
+  <nav aria-label="Breadcrumb" class="breadcrumb"><a href={url('')}>Catalog</a> / Plugins / <span aria-current="page">{plugin.name}</span></nav>
+
+  <div class="plugin-head">
+    <div class="title">
+      <h1>{plugin.displayName ?? plugin.name}</h1>
+      <code class="id">{[plugin.displayName && plugin.name, plugin.version && `v${plugin.version}`].filter(Boolean).join(' · ')}</code>
+    </div>
+    {plugin.description && <p class="lede">{plugin.description}</p>}
+    <div class="meta">
+      {plugin.author && <span>By {plugin.author.url ? <a href={plugin.author.url}>{plugin.author.name}</a> : plugin.author.name}</span>}
+      {plugin.license && <span>{plugin.license} license</span>}
+      {plugin.category && <span>Category: {plugin.category}</span>}
+      <TrustBadge level={plugin.trust.level} />
+      {plugin.trust.asksForSecrets && <span class="secret"><Icon name="key" size={16} />Asks for secrets</span>}
+    </div>
+  </div>
+
+  <InstallBlock plugin={plugin.name} dependencies={plugin.dependencies} />
+
+  <div class="two-col">
+    <div class="wide">
+      <section aria-labelledby="art-h" class="section">
+        <h2 id="art-h">What’s inside</h2>
+        {plugin.external && <p class="placeholder">This plugin is fetched from another repository, so its contents are listed after you install it.</p>}
+        {!plugin.external && groups.length === 0 && <p class="placeholder">This plugin has no skills, agents, commands, hooks or MCP servers.</p>}
+        {groups.map((g) => (
+          <div class="section" style="gap: 8px">
+            <h3 class="eyebrow">{g.label} · {g.items.length}</h3>
+            <ul class="panel rows">
+              {g.items.map((a) => (
+                <li>
+                  <a class="row-name" href={artifactUrl(a)}>{a.name}</a>
+                  <span class="row-desc">{a.description}</span>
+                  {a.invocation && <code>{a.invocation}</code>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      {!plugin.external && (
+        <section aria-labelledby="readme-h" class="section">
+          <h2 id="readme-h">README</h2>
+          {plugin.readmeHtml
+            ? <div class="panel panel-pad prose" set:html={plugin.readmeHtml} />
+            : metadataMode
+              ? <div class="placeholder">The README is not published while the catalog is in <code>metadata</code> mode. <a href={blobUrl(`${plugin.sourcePath}/README.md`)}>View it on GitHub</a> if you have access to the repository.</div>
+              : <div class="placeholder">This plugin has no README.</div>}
+        </section>
+      )}
+
+      {plugin.latestChange && (
+        <section aria-labelledby="chg-h" class="section">
+          <h2 id="chg-h">Latest change</h2>
+          <div class="panel panel-pad" style="display: flex; flex-direction: column; gap: 6px">
+            <code style="font-size: 14px; font-weight: 700">{plugin.latestChange.version}</code>
+            <div class="prose" set:html={plugin.latestChange.html} />
+          </div>
+        </section>
+      )}
+    </div>
+
+    <div class="narrow"><TrustPanel plugin={plugin} /></div>
+  </div>
+</Base>

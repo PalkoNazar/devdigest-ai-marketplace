@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import ArtifactCard from '../components/ArtifactCard.astro';
+import CopyLine from '../components/CopyLine.astro';
+import Icon from '../components/Icon.astro';
+import TrustBadge from '../components/TrustBadge.astro';
+import { catalog, pluginUrl, requestUrl, url } from '../data.ts';
+
+const { plugins, artifacts } = catalog;
+const categories = [...new Set(plugins.map((p) => p.category).filter(Boolean))].sort() as string[];
+const types = [...new Set(artifacts.map((a) => a.type))];
+const typeLabel: Record<string, string> = { skill: 'Skills', agent: 'Agents', command: 'Commands', hook: 'Hooks', mcp: 'MCP servers', monitor: 'Monitors', plugin: 'Plugins' };
+const config = {
+  indexUrl: url('search-index.json'),
+  requestBase: requestUrl(''),
+  total: artifacts.length + plugins.length,
+};
+---
+<Base title="" nav="search">
+  <div class="page-intro">
+    <h1>Find a plugin, skill or agent</h1>
+    <p>Describe what you need in plain words. Results come from the {catalog.marketplace.name} repository at its latest commit.</p>
+  </div>
+
+  <form class="search-box" role="search" id="search" data-config={JSON.stringify(config)} onsubmit="return false">
+    <label for="q">Search the catalog</label>
+    <div class="search-field">
+      <Icon name="search" size={22} />
+      <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="e.g. I need a skill for reviewing pull requests" />
+      <kbd aria-hidden="true">/</kbd>
+    </div>
+    <div class="filters">
+      <button type="button" class="chip" id="type-chip" hidden>
+        <span></span><Icon name="close" size={16} />
+      </button>
+      <span class="chip-note" id="type-note" hidden></span>
+      <span class="spacer"></span>
+      <label class="select-label">Type
+        <select id="type">
+          <option value="">All types</option>
+          {types.map((t) => <option value={t}>{typeLabel[t]}</option>)}
+          <option value="plugin">Plugins</option>
+        </select>
+      </label>
+      <label class="select-label">Plugin
+        <select id="plugin">
+          <option value="">All plugins</option>
+          {plugins.map((p) => <option value={p.name}>{p.name}</option>)}
+        </select>
+      </label>
+      {categories.length > 0 && (
+        <label class="select-label">Category
+          <select id="category">
+            <option value="">All categories</option>
+            {categories.map((c) => <option value={c}>{c}</option>)}
+          </select>
+        </label>
+      )}
+    </div>
+  </form>
+
+  <div class="section">
+    <p class="result-count" id="count" aria-live="polite">{artifacts.length} {artifacts.length === 1 ? 'artifact' : 'artifacts'} in {plugins.length} {plugins.length === 1 ? 'plugin' : 'plugins'}</p>
+    <ul class="cards" id="results">
+      {artifacts.map((a) => <ArtifactCard artifact={a} />)}
+      {plugins.map((p) => (
+        <li class="panel card" data-id={`plugin:${p.name}`} data-type="plugin" data-plugin={p.name} data-category={p.category ?? ''}>
+          <div class="card-top">
+            <span class="type-badge">Plugin</span>
+            <span class="spacer"></span>
+            <TrustBadge level={p.trust.level} />
+          </div>
+          <div class="card-title">
+            <a class="name" href={pluginUrl(p.name)} data-hl>{p.displayName ?? p.name}</a>
+            <span class="in">{p.artifactIds.length} {p.artifactIds.length === 1 ? 'artifact' : 'artifacts'}{p.version && ` · v${p.version}`}</span>
+          </div>
+          {p.description && <p class="card-desc" data-hl>{p.description}</p>}
+          {p.tags.length > 0 && <div class="tags">{p.tags.slice(0, 4).map((t) => <span class="tag">{t}</span>)}</div>}
+          <CopyLine text={`/plugin install ${p.name}@${catalog.marketplace.name}`} />
+        </li>
+      ))}
+    </ul>
+    <button type="button" class="button more" id="more" hidden>Show more</button>
+
+    <section class="panel empty" id="empty" hidden aria-labelledby="empty-h">
+      <Icon name="empty" size={40} />
+      <h2 id="empty-h">Nothing matches <code id="empty-q"></code>.</h2>
+      <p>Try fewer words, or remove the filters. If the skill doesn’t exist yet, ask for it — your search is copied into the request.</p>
+      <div class="actions">
+        <a class="button primary" id="request" href={requestUrl('')}>Request a skill <Icon name="external" size={16} /></a>
+        <button type="button" class="button" id="clear">Clear filters</button>
+      </div>
+      <p class="note">Opens a GitHub issue. You need access to the repository to submit it.</p>
+    </section>
+
+    <p id="not-it" style="margin: 8px 0 0; font-size: 15px; color: var(--text-2)" hidden>Not what you need? <a id="request-inline" href={requestUrl('')}>Request a skill</a> — it opens a prefilled GitHub issue.</p>
+  </div>
+
+  <section class="section" id="browse" hidden aria-labelledby="browse-h">
+    <h2 id="browse-h" class="eyebrow">Browse plugins</h2>
+    <ul class="panel rows link-rows">
+      {plugins.map((p) => (
+        <li><a href={pluginUrl(p.name)}><span style="font-weight: 600">{p.name}</span><span class="count">{p.artifactIds.length} {p.artifactIds.length === 1 ? 'artifact' : 'artifacts'}</span></a></li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<script>
+  import '../scripts/search.ts';
+</script>

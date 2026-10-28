@@ -1,0 +1,17 @@
+{
+  "name": "tools",
+  "version": "1.2.0",
+  "description": "Review tools",
+  "dependencies": ["shared"],
+  "userConfig": {
+    "token": { "type": "string", "title": "API token", "description": "Token", "sensitive": true, "required": true },
+    "endpoint": { "type": "string", "title": "Endpoint", "description": "URL" }
+  },
+  "metadata": {
+    "catalog": {
+      "minClaudeCodeVersion": "2.1.300",
+      "artifacts": { "skill/review-pr": { "keywords": ["code review", "pull request"] } },
+      "typo": true
+    }
+  }
+}

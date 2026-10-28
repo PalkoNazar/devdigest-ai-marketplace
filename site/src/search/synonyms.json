@@ -1,0 +1,18 @@
+{
+  "pr": ["pull request"],
+  "prs": ["pull request"],
+  "review": ["code review"],
+  "reviewing": ["review"],
+  "test": ["testing", "tests"],
+  "tests": ["test", "testing"],
+  "docs": ["documentation"],
+  "doc": ["documentation"],
+  "lint": ["linter", "linting"],
+  "ci": ["continuous integration", "pipeline"],
+  "deploy": ["deployment", "release"],
+  "greet": ["greeting", "hello"],
+  "hello": ["greeting", "greet"],
+  "commit": ["git"],
+  "bug": ["debug", "fix"],
+  "security": ["secure", "vulnerability"]
+}

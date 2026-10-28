@@ -1,0 +1,9 @@
+{
+  "name": "custom-tools",
+  "skills": ["./extra/"],
+  "agents": ["./my-agents/a.md"],
+  "commands": {
+    "about": { "content": "Explain the plugin.", "description": "About this plugin" },
+    "status": { "source": "./commands/status.md" }
+  }
+}

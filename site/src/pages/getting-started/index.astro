@@ -1,0 +1,56 @@
+---
+import Base from '../../layouts/Base.astro';
+import CopyLine from '../../components/CopyLine.astro';
+import { catalog, url } from '../../data.ts';
+const { name, repo } = catalog.marketplace;
+const example = catalog.plugins[0]?.name ?? '<plugin>';
+---
+<Base title="Getting started" nav="start" description={`Add the ${name} marketplace to Claude Code and install its plugins.`}>
+  <div class="page-intro">
+    <h1>Getting started</h1>
+    <p>Add the marketplace to Claude Code once, then install any plugin from it.</p>
+  </div>
+
+  <ol class="steps">
+    <li class="panel">
+      <h2>1. Add the marketplace</h2>
+      <p>In a Claude Code session:</p>
+      <CopyLine dark text={`/plugin marketplace add ${repo}`} />
+      <p>Or from your shell:</p>
+      <CopyLine dark text={`claude plugin marketplace add ${repo}`} />
+      <p>It registers as <code>{name}</code>.</p>
+    </li>
+    <li class="panel">
+      <h2>2. Get access to the repository</h2>
+      <p>The repository is private. Claude Code clones it with your own git credentials and never prompts for them, so set them up first. Either:</p>
+      <ul>
+        <li>load a GitHub SSH key into <code>ssh-agent</code>, or</li>
+        <li>store an HTTPS credential with the GitHub CLI:</li>
+      </ul>
+      <CopyLine text="gh auth login && gh auth setup-git" />
+      <p>Without a GitHub SSH key, also set <code>CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1</code> so the clone uses HTTPS.</p>
+    </li>
+    <li class="panel">
+      <h2>3. Install and use a plugin</h2>
+      <CopyLine dark text={`/plugin install ${example}@${name}`} />
+      <p>Plugin skills run as <code>/&lt;plugin&gt;:&lt;skill&gt;</code>. Each artifact’s page in the <a href={url('')}>catalog</a> shows its exact command.</p>
+    </li>
+    <li class="panel">
+      <h2>4. Get updates</h2>
+      <p>Auto-update is off for third-party marketplaces. Turn it on in <code>/plugin</code> → <strong>Marketplaces</strong> → <code>{name}</code> → <strong>Enable auto-update</strong>. To update by hand:</p>
+      <CopyLine text={`/plugin marketplace update ${name}`} />
+    </li>
+    <li class="panel">
+      <h2>5. Share with your team</h2>
+      <p>Use <a href={url('setup/')}>Setup</a> to generate a <code>.claude/settings.json</code> that enables a set of plugins for everyone who works in a repository.</p>
+    </li>
+    <li class="panel">
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li><strong>Clone or update fails</strong>: your git credentials can’t be used without a prompt. Redo step 2, then run <code>/plugin marketplace update {name}</code>.</li>
+        <li><strong><code>Plugin "…" not found in marketplace</code></strong>: the plugin was renamed or removed. Update the marketplace and check the name in the catalog.</li>
+        <li><strong>A plugin doesn’t load</strong>: run <code>claude plugin list</code> to see its error, and <code>/reload-plugins</code> after fixing it.</li>
+      </ul>
+    </li>
+  </ol>
+</Base>

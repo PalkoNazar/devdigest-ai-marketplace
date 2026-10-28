@@ -1,0 +1,9 @@
+---
+import Icon from './Icon.astro';
+interface Props { text: string; label?: string; dark?: boolean }
+const { text, label = `Copy ${text}`, dark = false } = Astro.props;
+---
+<div class:list={['copy-line', { dark }]}>
+  <code>{text}</code>
+  <button type="button" class="icon-button" data-copy={text} aria-label={label}><Icon name="copy" /></button>
+</div>

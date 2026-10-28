@@ -1,0 +1,25 @@
+---
+import CopyLine from './CopyLine.astro';
+import { catalog, pluginUrl } from '../data.ts';
+interface Props { plugin: string; dependencies: string[]; invocation?: string }
+const { plugin, dependencies, invocation } = Astro.props;
+const { name, repo } = catalog.marketplace;
+const local = (d: string) => d.endsWith(`@${name}`) ? d.slice(0, -name.length - 1) : null;
+---
+<section aria-labelledby="install-h" class="panel panel-pad install">
+  <h2 id="install-h">Install</h2>
+  <CopyLine dark text={`/plugin marketplace add ${repo}`} label="Copy marketplace add command" />
+  <CopyLine dark text={`/plugin install ${plugin}@${name}`} label="Copy install command" />
+  {invocation && <CopyLine dark text={invocation} label={`Copy ${invocation}`} />}
+  <div class="install-extra">
+    <details>
+      <summary>Shell form (claude plugin …)</summary>
+      <code>{`claude plugin marketplace add ${repo}\nclaude plugin install ${plugin}@${name}`}</code>
+    </details>
+    {dependencies.length > 0 && (
+      <span>Also installs: {dependencies.map((d, i) => (
+        <>{i > 0 && ', '}{local(d) ? <a href={pluginUrl(local(d)!)}>{local(d)}</a> : <code>{d}</code>}</>
+      ))}</span>
+    )}
+  </div>
+</section>

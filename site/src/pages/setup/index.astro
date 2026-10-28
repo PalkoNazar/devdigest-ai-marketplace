@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import { TRUST_LABELS } from '../../lib/trust.ts';
+import { settingsFor } from '../../lib/setup.ts';
+import { catalog, url } from '../../data.ts';
+
+const { name: marketplace, repo } = catalog.marketplace;
+const plugins = catalog.plugins.map((p) => ({
+  name: p.name,
+  description: p.description,
+  dependencies: p.dependencies,
+  level: p.trust.level,
+  trust: TRUST_LABELS[p.trust.level] + (p.trust.asksForSecrets ? ' · asks for secrets' : ''),
+}));
+const initial = settingsFor({ marketplace, repo, plugins, selected: [], target: 'project', autoUpdate: true });
+const config = { marketplace, repo, plugins: plugins.map(({ name, dependencies }) => ({ name, dependencies })) };
+---
+<Base title="Setup" nav="setup" description="Generate Claude Code settings that enable DevDigest AI plugins for a team.">
+  <div class="page-intro">
+    <h1>Set up plugins for your team</h1>
+    <p>Pick plugins, copy the settings into your repository. Teammates are prompted to install them when they trust the project folder. They still need read access to the repository — see <a href={url('getting-started/')}>Getting started</a>.</p>
+  </div>
+
+  <noscript><p class="noscript">The settings generator needs JavaScript. Without it, use the CLI commands on each plugin’s page.</p></noscript>
+
+  <div class="two-col" id="setup" data-config={JSON.stringify(config)}>
+    <section aria-labelledby="pick-h" class="narrow section" style="flex: 1 1 420px; gap: 14px">
+      <h2 id="pick-h" style="margin: 0; font-size: 20px">1. Choose plugins</h2>
+      <label class="field">Filter plugins
+        <input type="search" id="filter" placeholder="e.g. review" autocomplete="off" />
+      </label>
+      <ul class="panel rows setup-list" id="plugins">
+        {plugins.map((p) => (
+          <li data-name={p.name} data-text={`${p.name} ${p.description}`.toLowerCase()}>
+            <label>
+              <input type="checkbox" value={p.name} />
+              <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                <span style="display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline">
+                  <span class="pname">{p.name}</span>
+                  <span class="ptrust" data-level={p.level}>{p.trust}</span>
+                </span>
+                {p.description && <span class="pdesc">{p.description}</span>}
+                <span class="preq" hidden></span>
+              </span>
+            </label>
+          </li>
+        ))}
+      </ul>
+
+      <h2 style="margin: 12px 0 0; font-size: 20px">2. Where it goes</h2>
+      <fieldset class="panel">
+        <legend>Target</legend>
+        <label class="radio"><input type="radio" name="target" value="project" checked /><span>Project settings <code class="muted" style="font-size: 14px">.claude/settings.json</code></span></label>
+        <label class="radio"><input type="radio" name="target" value="managed" /><span>Managed settings <span class="muted">(for admins)</span></span></label>
+        <div id="managed-opts" hidden>
+          <label class="radio indent"><input type="checkbox" id="auto-update" checked /><span>Turn on auto-update for the marketplace</span></label>
+          <p class="note indent">Managed settings live in the system-wide managed-settings file your organization deploys; see the <a href="https://code.claude.com/docs/en/settings">Claude Code settings docs</a> for the path on each OS.</p>
+        </div>
+      </fieldset>
+    </section>
+
+    <section aria-labelledby="out-h" class="wide" style="flex: 999 1 480px; gap: 14px">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+        <h2 id="out-h" style="margin: 0; font-size: 20px; flex: 1 1 auto">3. Copy the result</h2>
+        <button type="button" class="button primary" id="copy">Copy JSON</button>
+        <button type="button" class="button" id="download">Download</button>
+      </div>
+      <p class="status" id="status" aria-live="polite"></p>
+      <div class="code-panel">
+        <div class="label" id="file-label">{initial.fileLabel}</div>
+        <pre id="json">{initial.json}</pre>
+      </div>
+      <p style="margin: 0; font-size: 14px; color: var(--text-2)">Already have a settings file? Merge the <code>extraKnownMarketplaces</code> and <code>enabledPlugins</code> keys into it rather than overwriting it.</p>
+      <h3 style="margin: 8px 0 0; font-size: 16px">Or with the CLI</h3>
+      <pre class="panel plain-pre" id="cli">{initial.cli}</pre>
+      <p class="note">Shareable link: <code id="share" style="word-break: break-all"></code></p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import '../../scripts/setup.ts';
+</script>

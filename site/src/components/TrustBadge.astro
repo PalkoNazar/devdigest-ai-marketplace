@@ -1,0 +1,8 @@
+---
+import Icon from './Icon.astro';
+import { TRUST_LABELS, type TrustLevel } from '../lib/trust.ts';
+interface Props { level: TrustLevel }
+const { level } = Astro.props;
+const icon = level === 'content-only' ? 'doc' : level === 'network' ? 'globe' : 'terminal';
+---
+<span class="trust" data-level={level}><Icon name={icon} size={16} />{TRUST_LABELS[level]}</span>

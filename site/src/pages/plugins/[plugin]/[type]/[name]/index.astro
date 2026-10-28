@@ -1,0 +1,63 @@
+---
+import Base from '../../../../../layouts/Base.astro';
+import InstallBlock from '../../../../../components/InstallBlock.astro';
+import TrustBadge from '../../../../../components/TrustBadge.astro';
+import { artifactById, artifactSlug, artifactUrl, blobUrl, catalog, pluginByName, pluginUrl, url } from '../../../../../data.ts';
+import type { Artifact } from '../../../../../lib/catalog.ts';
+
+export function getStaticPaths() {
+  return catalog.artifacts.map((artifact) => ({
+    params: { plugin: artifact.plugin, type: artifact.type, name: artifactSlug(artifact) },
+    props: { artifact },
+  }));
+}
+const { artifact: a } = Astro.props as { artifact: Artifact };
+const plugin = pluginByName.get(a.plugin)!;
+const siblings = plugin.artifactIds.filter((id) => id !== a.id).map((id) => artifactById.get(id)!);
+const typeLabel = a.type === 'mcp' ? 'MCP server' : a.type;
+---
+<Base title={`${a.name} (${a.plugin})`} description={a.description}>
+  <nav aria-label="Breadcrumb" class="breadcrumb">
+    <a href={url('')}>Catalog</a> / <a href={pluginUrl(a.plugin)}>{a.plugin}</a> / <span aria-current="page">{a.name}</span>
+  </nav>
+
+  <div class="plugin-head">
+    <div class="title">
+      <span class="type-badge">{typeLabel}</span>
+      <h1>{a.name}</h1>
+    </div>
+    {a.description && <p class="lede">{a.description}</p>}
+    <div class="meta">
+      <span>In <a href={pluginUrl(a.plugin)}>{plugin.displayName ?? plugin.name}</a>{plugin.version && ` v${plugin.version}`}</span>
+      <TrustBadge level={plugin.trust.level} />
+      <a href={blobUrl(a.sourcePath)}>View source on GitHub</a>
+    </div>
+    {a.keywords.length > 0 && <div class="tags">{a.keywords.map((k) => <span class="tag">{k}</span>)}</div>}
+  </div>
+
+  <InstallBlock plugin={plugin.name} dependencies={plugin.dependencies} invocation={a.invocation} />
+
+  <section aria-labelledby="body-h" class="section">
+    <h2 id="body-h">Contents</h2>
+    {a.bodyHtml
+      ? <div class="panel panel-pad prose" set:html={a.bodyHtml} />
+      : catalog.publishContent === 'metadata' && ['skill', 'agent', 'command'].includes(a.type)
+        ? <div class="placeholder">The full text is not published while the catalog is in <code>metadata</code> mode. <a href={blobUrl(a.sourcePath)}>View it on GitHub</a> if you have access to the repository.</div>
+        : <div class="placeholder">Defined in <a href={blobUrl(a.sourcePath)}><code>{a.sourcePath}</code></a>. See the plugin’s <a href={pluginUrl(a.plugin)}>trust panel</a> for what it runs.</div>}
+  </section>
+
+  {siblings.length > 0 && (
+    <section aria-labelledby="sib-h" class="section">
+      <h2 id="sib-h">Also in {plugin.name}</h2>
+      <ul class="panel rows">
+        {siblings.map((s) => (
+          <li>
+            <a class="row-name" href={artifactUrl(s)}>{s.name}</a>
+            <span class="row-desc">{s.description}</span>
+            <span class="type-badge">{s.type === 'mcp' ? 'MCP' : s.type}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</Base>

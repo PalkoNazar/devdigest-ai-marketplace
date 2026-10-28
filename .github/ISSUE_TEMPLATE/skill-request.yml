@@ -1,0 +1,24 @@
+name: Skill request
+description: Ask for a skill, agent or plugin the catalog doesn't have yet
+title: "Skill request: "
+labels: [skill-request]
+body:
+  - type: input
+    id: query
+    attributes:
+      label: What you searched for
+      description: Filled in from the catalog search.
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: What should it do?
+      description: The task, and where you'd use it.
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Example requests you'd give Claude, or the output you expect.

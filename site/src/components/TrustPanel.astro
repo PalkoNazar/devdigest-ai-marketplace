@@ -1,0 +1,97 @@
+---
+import Icon from './Icon.astro';
+import { TRUST_LABELS } from '../lib/trust.ts';
+import { blobUrl, catalog, pluginUrl } from '../data.ts';
+import type { Plugin } from '../lib/catalog.ts';
+interface Props { plugin: Plugin }
+const { plugin } = Astro.props;
+const t = plugin.trust;
+const mkt = catalog.marketplace.name;
+const icon = t.level === 'content-only' ? 'doc' : t.level === 'network' ? 'globe' : 'terminal';
+---
+<aside aria-labelledby="trust-h" class="panel trust-panel">
+  <header>
+    <h2 id="trust-h">What it runs on your machine</h2>
+    <div class="tags">
+      <span class="trust-pill" data-level={t.level}><Icon name={icon} size={16} />{TRUST_LABELS[t.level]}</span>
+      {t.asksForSecrets && <span class="trust-pill warn"><Icon name="key" size={16} />Asks for secrets</span>}
+    </div>
+    <p class="note">A factual summary read from the plugin’s files at build time. It is not a security review.</p>
+  </header>
+  {plugin.external ? (
+    <dl><div class="none"><dt>Details</dt><dd class="none">Available after install — this plugin is fetched from another repository.</dd></div></dl>
+  ) : (
+  <dl>
+    <div class:list={{ none: t.hooks.length === 0 }}>
+      <dt>Hooks</dt>
+      {t.hooks.length === 0 ? <dd class="none">None</dd> : (
+        <dd>{t.hooks.map((h) => (
+          <>
+            <span><strong>{h.event}</strong>{h.matcher && <> · matcher <code>{h.matcher}</code></>} · {h.form === 'exec' || h.form === 'shell' ? `${h.form} form` : h.form}</span>
+            <code class="cmd">{h.command}</code>
+          </>
+        ))}</dd>
+      )}
+    </div>
+    <div class:list={{ none: t.mcpServers.length === 0 }}>
+      <dt>MCP servers</dt>
+      {t.mcpServers.length === 0 ? <dd class="none">None</dd> : (
+        <dd>{t.mcpServers.map((s) => (
+          <>
+            <span><strong>{s.name}</strong> · {s.transport}</span>
+            <code class="cmd">{s.command ?? s.url}</code>
+            {s.env.length > 0 && <span>Env: {s.env.map((e, i) => <>{i > 0 && ', '}<code>{e}</code></>)} <span class="muted">(names only)</span></span>}
+          </>
+        ))}</dd>
+      )}
+    </div>
+    <div class:list={{ none: t.monitors.length === 0 }}>
+      <dt>Background monitors</dt>
+      {t.monitors.length === 0 ? <dd class="none">None</dd> : (
+        <dd>{t.monitors.map((m) => (
+          <>
+            <span><strong>{m.name}</strong> · starts {m.when === 'always' ? 'with every session' : m.when.replace('on-skill-invoke:', 'when the skill runs: ')}</span>
+            <code class="cmd">{m.command}</code>
+          </>
+        ))}</dd>
+      )}
+    </div>
+    <div class:list={{ none: t.bin.length === 0 }}>
+      <dt>Executables on PATH</dt>
+      {t.bin.length === 0 ? <dd class="none">None</dd> : <dd>{t.bin.map((b) => <code>{b}</code>)}</dd>}
+    </div>
+    <div class:list={{ none: t.userConfig.length === 0 }}>
+      <dt>Configuration it asks for</dt>
+      {t.userConfig.length === 0 ? <dd class="none">None</dd> : (
+        <dd>{t.userConfig.map((c) => (
+          <span><code>{c.key}</code> — {c.title}{c.required && ' · required'}{c.sensitive && <> · <span class="secret">stored as secret</span></>}</span>
+        ))}</dd>
+      )}
+    </div>
+    <div class:list={{ none: t.toolAccess.length === 0 }}>
+      <dt>Tool access</dt>
+      {t.toolAccess.length === 0 ? <dd class="none">None declared</dd> : (
+        <dd>{t.toolAccess.map((x) => <span>{x.name}: <code>{x.tools.join(', ')}</code></span>)}</dd>
+      )}
+    </div>
+    <div class:list={{ none: t.networkHosts.length === 0 }}>
+      <dt>Network hosts</dt>
+      {t.networkHosts.length === 0 ? <dd class="none">None</dd> : <dd>{t.networkHosts.map((h) => <code>{h}</code>)}</dd>}
+    </div>
+    <div class:list={{ none: !t.minClaudeCodeVersion && t.dependencies.length === 0 }}>
+      <dt>Requirements</dt>
+      {!t.minClaudeCodeVersion && t.dependencies.length === 0 ? <dd class="none">None</dd> : (
+        <dd>
+          {t.minClaudeCodeVersion && <span>Claude Code ≥ <code>{t.minClaudeCodeVersion}</code></span>}
+          {t.dependencies.map((d) => (
+            <span>Depends on {d.endsWith(`@${mkt}`) ? <a href={pluginUrl(d.slice(0, -mkt.length - 1))}>{d}</a> : <code>{d}</code>}</span>
+          ))}
+        </dd>
+      )}
+    </div>
+  </dl>
+  )}
+  {t.sources.length > 0 && (
+    <footer>Source: {t.sources.map((s, i) => <>{i > 0 && ', '}<a href={blobUrl(s)}>{s.split('/').slice(-2).join('/')}</a></>)}</footer>
+  )}
+</aside>

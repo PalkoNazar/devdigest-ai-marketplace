@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import { catalog, repoUrl, url } from '../data.ts';
+interface Props { title: string; description?: string; nav?: 'search' | 'setup' | 'start' }
+const { title, description = catalog.marketplace.description, nav } = Astro.props;
+const fullTitle = title ? `${title} — DevDigest AI catalog` : 'DevDigest AI catalog';
+const built = new Date(catalog.generatedAt).toISOString().slice(0, 10);
+const links = [
+  { key: 'search', href: url(''), label: 'Search' },
+  { key: 'setup', href: url('setup/'), label: 'Setup' },
+  { key: 'start', href: url('getting-started/'), label: 'Getting started' },
+];
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+  <script is:inline>
+    (() => {
+      let t = null;
+      try { t = localStorage.getItem('theme'); } catch {}
+      if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href={url('')}>
+        <span class="brand-name">DevDigest AI</span>
+        <span class="brand-tag">catalog</span>
+      </a>
+      <nav aria-label="Main" class="main-nav">
+        {links.map((l) => <a href={l.href} aria-current={nav === l.key ? 'page' : undefined}>{l.label}</a>)}
+      </nav>
+      <button type="button" class="icon-button theme-toggle" aria-label="Switch to dark theme">
+        <Icon name="moon" size={20} /><Icon name="sun" size={20} />
+      </button>
+    </div>
+  </header>
+  <main class="container page">
+    <slot />
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <span>Built from <code>main @ {catalog.commit.slice(0, 7)}</code> on {built}</span>
+      <a href={url('index.json')}>index.json</a>
+      <a href={repoUrl}>Source on GitHub</a>
+    </div>
+  </footer>
+  <script>
+    import '../scripts/common.ts';
+  </script>
+</body>
+</html>

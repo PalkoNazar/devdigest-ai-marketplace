@@ -77,6 +77,11 @@ claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace --scope projec
 - **Executables**: keep scripts in `scripts/`, not a top-level `bin/`.
 - **Files**: no Git LFS — clones only get pointer files.
 
+## Catalog site
+
+[`site/`](site) is a static catalog of everything in this marketplace, with search, a
+trust panel per plugin and a settings generator for teams. See [`site/README.md`](site/README.md).
+
 ## License
 
 [MIT](LICENSE)

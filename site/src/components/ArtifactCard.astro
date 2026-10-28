@@ -1,0 +1,24 @@
+---
+import CopyLine from './CopyLine.astro';
+import TrustBadge from './TrustBadge.astro';
+import { artifactUrl, pluginByName, pluginUrl } from '../data.ts';
+import type { Artifact } from '../lib/catalog.ts';
+interface Props { artifact: Artifact }
+const { artifact: a } = Astro.props;
+const plugin = pluginByName.get(a.plugin)!;
+const tags = [...a.keywords, ...plugin.tags].filter((t, i, all) => all.indexOf(t) === i).slice(0, 4);
+---
+<li class="panel card" data-id={a.id} data-type={a.type} data-plugin={a.plugin} data-category={plugin.category ?? ''}>
+  <div class="card-top">
+    <span class="type-badge">{a.type === 'mcp' ? 'MCP' : a.type}</span>
+    <span class="spacer"></span>
+    <TrustBadge level={plugin.trust.level} />
+  </div>
+  <div class="card-title">
+    <a class="name" href={artifactUrl(a)} data-hl>{a.name}</a>
+    <span class="in">in <a href={pluginUrl(a.plugin)}>{a.plugin}</a></span>
+  </div>
+  {a.description && <p class="card-desc" data-hl>{a.description}</p>}
+  {tags.length > 0 && <div class="tags">{tags.map((t) => <span class="tag">{t}</span>)}</div>}
+  {a.invocation && <CopyLine text={a.invocation} />}
+</li>

@@ -1,0 +1,11 @@
+{
+  "name": "fixture",
+  "description": "Fixture marketplace",
+  "owner": { "name": "Tests" },
+  "plugins": [
+    { "name": "tools", "source": "./plugins/tools", "category": "code review", "tags": ["git"] },
+    { "name": "shared", "source": "./plugins/shared", "description": "Shared fragments" },
+    { "name": "custom", "source": "./plugins/custom" },
+    { "name": "ext", "source": { "source": "github", "repo": "someone/ext" }, "description": "External plugin" }
+  ]
+}

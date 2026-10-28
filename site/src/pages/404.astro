@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../data.ts';
+---
+<Base title="Page not found">
+  <div class="page-intro">
+    <h1>Page not found</h1>
+    <p>The page may have moved, or the plugin was renamed. Search the catalog instead.</p>
+  </div>
+  <form class="search-box" action={url('')} method="get" role="search">
+    <label for="q">Search the catalog</label>
+    <div class="search-field">
+      <Icon name="search" size={22} />
+      <input id="q" name="q" type="search" autocomplete="off" />
+    </div>
+  </form>
+  <p><a href={url('')}>Back to the catalog</a></p>
+</Base>

@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "devdigest-ai",
-  "description": "Claude Code plugins from DevDigest AI",
+  "name": "devdigest-ai-stable",
+  "description": "Claude Code plugins from DevDigest AI — stable channel (verified releases only)",
   "owner": {
     "name": "PalkoNazar",
     "url": "https://github.com/PalkoNazar"

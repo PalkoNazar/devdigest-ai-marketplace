@@ -1,4 +1,21 @@
-# DevDigest AI Marketplace
+# DevDigest AI Marketplace — stable channel
+
+This is the `stable` branch. It holds only releases that passed their evals and is
+registered as **`devdigest-ai-stable`**. The latest releases live on `main`
+(`devdigest-ai`). See "Release channels" in the README on `main`.
+
+| Plugin | Stable version |
+| :- | :- |
+| sdd-engineering | 1.0.0 |
+| engineering-paved-path | 1.0.0 |
+| research-tools | 1.0.0 |
+| architecture-review | 1.0.0 |
+| hello-world | 0.1.0 |
+
+```bash
+claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace#stable
+claude plugin install sdd-engineering@devdigest-ai-stable
+```
 
 A [Claude Code](https://code.claude.com) plugin marketplace.
 
@@ -7,23 +24,23 @@ A [Claude Code](https://code.claude.com) plugin marketplace.
 In a Claude Code session:
 
 ```
-/plugin marketplace add PalkoNazar/devdigest-ai-marketplace
+/plugin marketplace add PalkoNazar/devdigest-ai-marketplace#stable
 ```
 
 Or from the shell:
 
 ```bash
-claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace
+claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace#stable
 ```
 
-The marketplace registers as `devdigest-ai`.
+The marketplace registers as `devdigest-ai-stable`.
 
 > Without a GitHub SSH key, set `CLAUDE_CODE_PLUGIN_PREFER_HTTPS=1` so the clone uses HTTPS.
 
 ## Install a plugin
 
 ```
-/plugin install <plugin>@devdigest-ai
+/plugin install <plugin>@devdigest-ai-stable
 ```
 
 ## Plugins
@@ -39,8 +56,8 @@ The marketplace registers as `devdigest-ai`.
 ## Get updates
 
 Auto-update is off by default for third-party marketplaces. To turn it on, open `/plugin`,
-go to **Marketplaces**, select `devdigest-ai`, and choose **Enable auto-update**.
-To update manually, run `/plugin marketplace update devdigest-ai`.
+go to **Marketplaces**, select `devdigest-ai-stable`, and choose **Enable auto-update**.
+To update manually, run `/plugin marketplace update devdigest-ai-stable`.
 
 ## Share with a team
 
@@ -48,7 +65,7 @@ To register the marketplace for everyone in a project, run this in the project o
 commit the `.claude/settings.json` it writes:
 
 ```bash
-claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace --scope project
+claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace#stable --scope project
 ```
 
 ## Add a plugin
@@ -64,7 +81,7 @@ claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace --scope projec
    claude plugin validate ./plugins/<name>
    claude plugin validate . --strict
    claude plugin marketplace add ./
-   claude plugin install <name>@devdigest-ai
+   claude plugin install <name>@devdigest-ai-stable
    ```
 
 4. Add a `CHANGELOG.md` in the plugin and a line to the root `CHANGELOG.md`.

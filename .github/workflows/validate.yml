@@ -42,6 +42,18 @@ jobs:
             fi
           done
 
+      - name: Test hook scripts
+        run: for t in tests/hooks/*.test.mjs; do node "$t"; done
+
+      - name: Check hook copies are identical
+        run: |
+          for f in plugins/*/hooks/readonly-bash.mjs; do
+            if ! cmp -s "$f" plugins/sdd-engineering/hooks/readonly-bash.mjs; then
+              echo "::error::$f differs from plugins/sdd-engineering/hooks/readonly-bash.mjs"
+              exit 1
+            fi
+          done
+
       - name: Check entries are sorted and unique
         run: |
           names=$(jq -r '.plugins[].name' .claude-plugin/marketplace.json)

@@ -1,0 +1,19 @@
+{
+  "name": "engineering-paved-path",
+  "version": "1.0.0",
+  "description": "React, Next.js, Fastify, architecture, testing and security skills for coding agents",
+  "author": {
+    "name": "PalkoNazar",
+    "url": "https://github.com/PalkoNazar"
+  },
+  "repository": "https://github.com/PalkoNazar/devdigest-ai-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "nextjs",
+    "fastify",
+    "architecture",
+    "testing",
+    "security"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "sdd-engineering",
+  "version": "1.0.0",
+  "description": "Spec-driven development: spec, plan, implement and verify with agents, then a workflow retro",
+  "author": {
+    "name": "PalkoNazar",
+    "url": "https://github.com/PalkoNazar"
+  },
+  "repository": "https://github.com/PalkoNazar/devdigest-ai-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "sdd",
+    "spec",
+    "plan",
+    "agents",
+    "workflow"
+  ],
+  "dependencies": [
+    {
+      "name": "engineering-paved-path",
+      "version": "^1.0.0"
+    },
+    {
+      "name": "research-tools",
+      "version": "^1.0.0"
+    },
+    {
+      "name": "architecture-review",
+      "version": "^1.0.0"
+    }
+  ]
+}

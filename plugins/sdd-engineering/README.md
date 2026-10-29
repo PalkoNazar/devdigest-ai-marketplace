@@ -138,8 +138,11 @@ sdd-engineering/
 │   ├── hooks.json
 │   ├── readonly-bash.mjs           # identical copies in research-tools and architecture-review
 │   └── spec-write-scope.mjs
+├── evals/story-coverage/          # claude plugin eval suite
 ├── CHANGELOG.md
 └── README.md
 ```
 
-Hook tests are in the repository at `tests/hooks/`.
+Evals: `cd plugins && claude plugin eval . --eval-dir sdd-engineering/evals --allow-tools Write Edit`.
+Run from `plugins/`: the case loads the three dependencies too, since the plugin doesn't
+load without them. Results go to `evals/results/` (git-ignored). Hook tests are in the repository at `tests/hooks/`.

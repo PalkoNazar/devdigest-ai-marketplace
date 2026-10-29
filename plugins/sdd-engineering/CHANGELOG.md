@@ -5,6 +5,20 @@ a change to the plan format, an agent's input or report format, or a dependency'
 version is a major version. Each release is tagged `sdd-engineering--v<version>`, after
 the tags of the dependency versions it needs.
 
+## 1.1.0 — 2026-10-29
+
+Backward-compatible: the spec template, the plan format and all agent inputs are unchanged.
+
+### New
+
+- `spec-creator` checks story coverage: every user story is referenced by at least one
+  acceptance criterion, or becomes a Non-goal, or is blocked by a question. Its report's
+  Self-check gains a `Story coverage:` line.
+- First eval suite, `evals/story-coverage/`: runs `spec-creator` on a three-story feature
+  and checks that every story is covered. Run it with
+  `cd plugins && claude plugin eval . --eval-dir sdd-engineering/evals --allow-tools Write Edit`
+  (run from `plugins/`, so the dependencies listed in the case can load).
+
 ## 1.0.0 — 2026-10-29
 
 First release, packaged from the DevDigest project's agents and skills and made

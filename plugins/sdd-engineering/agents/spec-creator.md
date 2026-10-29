@@ -243,6 +243,9 @@ of them:
   IF … THEN AC or an explicit Non-goal.
 - Each AC references its user story `(US-n)`. Each EC points to an AC, a Non-goal
   or a question.
+- **Story coverage.** Every user story is referenced by at least one AC. A story with
+  no AC either gets one, becomes a Non-goal, or gets a `Qn` that blocks it. A removed
+  story (`~~US-2~~`) needs no AC.
 - IDs (US-, AC-, EC-, Q-, P-) are **stable**. Never renumber. A removed item stays
   as `~~AC-3~~ removed: <reason>` so plans that cite it don't silently drift.
 
@@ -268,6 +271,7 @@ After writing the draft, re-read it against this checklist and fix what you can:
 
 - every AC uses an EARS form, has one SHALL and is testable;
 - every EC is covered;
+- every US is referenced by at least one AC (story coverage);
 - every design gap is handled;
 - no HOW leaked into Goals or AC;
 - every input has a tag;
@@ -327,6 +331,7 @@ File: `specs/…` · Spec ID: SPEC-NN · Round: N · Open questions: k · Open p
 
 ## Self-check
 - EARS form + one SHALL per AC: ok | <AC ids that fail>
+- Story coverage: ok | <US ids with no AC> → <AC added / Non-goal / Qn>
 - EC covered: ok | … · No HOW in Goals/AC: ok | … · Inputs tagged: ok | …
 
 ## For the calling session

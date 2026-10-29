@@ -58,9 +58,13 @@ To roll a project back to the stable release, swap the marketplace and the plugi
 
 ```bash
 claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace#stable --scope project
-claude plugin uninstall sdd-engineering@devdigest-ai --scope project
+claude plugin uninstall sdd-engineering@devdigest-ai --scope project --prune -y
 claude plugin install sdd-engineering@devdigest-ai-stable --scope project
 ```
+
+`--prune` also removes the `@devdigest-ai` copies of the three dependencies. Without it they
+stay enabled next to the `@devdigest-ai-stable` ones, and their skills and agents load twice.
+`-y` confirms the removal when the shell is not interactive.
 
 Each release is also tagged `<plugin>--v<version>` (for example `sdd-engineering--v1.1.0`);
 dependency version ranges resolve against these tags.

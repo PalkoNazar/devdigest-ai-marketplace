@@ -1,0 +1,23 @@
+{
+  "name": "architecture-review",
+  "version": "1.0.0",
+  "description": "Read-only architecture reviewer agent: layer and import rules with evidence for every finding",
+  "author": {
+    "name": "PalkoNazar",
+    "url": "https://github.com/PalkoNazar"
+  },
+  "repository": "https://github.com/PalkoNazar/devdigest-ai-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "architecture",
+    "review",
+    "agent",
+    "read-only"
+  ],
+  "dependencies": [
+    {
+      "name": "engineering-paved-path",
+      "version": "^1.0.0"
+    }
+  ]
+}

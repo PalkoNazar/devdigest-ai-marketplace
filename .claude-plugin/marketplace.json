@@ -8,6 +8,28 @@
   },
   "plugins": [
     {
+      "name": "architecture-review",
+      "source": "./plugins/architecture-review",
+      "description": "Read-only architecture reviewer agent: layer and import rules with evidence for every finding",
+      "category": "engineering",
+      "tags": [
+        "architecture",
+        "review"
+      ]
+    },
+    {
+      "name": "engineering-paved-path",
+      "source": "./plugins/engineering-paved-path",
+      "description": "React, Next.js, Fastify, architecture, testing and security skills for coding agents",
+      "category": "engineering",
+      "tags": [
+        "react",
+        "nextjs",
+        "fastify",
+        "security"
+      ]
+    },
+    {
       "name": "hello-world",
       "source": "./plugins/hello-world",
       "description": "Example plugin with a single greeting skill",
@@ -15,6 +37,25 @@
       "tags": [
         "example",
         "starter"
+      ]
+    },
+    {
+      "name": "research-tools",
+      "source": "./plugins/research-tools",
+      "description": "Read-only researcher agent that answers one question with cited evidence",
+      "category": "engineering",
+      "tags": [
+        "research"
+      ]
+    },
+    {
+      "name": "sdd-engineering",
+      "source": "./plugins/sdd-engineering",
+      "description": "Spec-driven development: spec, plan, implement and verify with agents, then a workflow retro",
+      "category": "engineering",
+      "tags": [
+        "sdd",
+        "workflow"
       ]
     }
   ]

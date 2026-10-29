@@ -1,0 +1,16 @@
+{
+  "name": "research-tools",
+  "version": "1.0.0",
+  "description": "Read-only researcher agent that answers one question with cited evidence from the repo or the web",
+  "author": {
+    "name": "PalkoNazar",
+    "url": "https://github.com/PalkoNazar"
+  },
+  "repository": "https://github.com/PalkoNazar/devdigest-ai-marketplace",
+  "license": "MIT",
+  "keywords": [
+    "research",
+    "agent",
+    "read-only"
+  ]
+}

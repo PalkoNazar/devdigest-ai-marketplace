@@ -30,7 +30,11 @@ The marketplace registers as `devdigest-ai`.
 
 | Plugin | Description |
 | :- | :- |
+| [architecture-review](plugins/architecture-review) | Read-only architecture reviewer agent |
+| [engineering-paved-path](plugins/engineering-paved-path) | React, Next.js, Fastify, architecture, testing and security skills |
 | [hello-world](plugins/hello-world) | Example plugin with a single greeting skill |
+| [research-tools](plugins/research-tools) | Read-only researcher agent with cited evidence |
+| [sdd-engineering](plugins/sdd-engineering) | Spec-driven development: spec → plan → implement → verify → retro. Installs the three plugins above as dependencies |
 
 ## Get updates
 
@@ -63,7 +67,9 @@ claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace --scope projec
    claude plugin install <name>@devdigest-ai
    ```
 
-4. Add an entry to `CHANGELOG.md`.
+4. Add a `CHANGELOG.md` in the plugin and a line to the root `CHANGELOG.md`.
+5. After merging to `main`, tag the release `<plugin>--v<version>`. Plugins that depend
+   on it resolve version ranges against these tags.
 
 ## Conventions
 

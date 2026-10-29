@@ -13,7 +13,7 @@ description: >-
   when a feature has no approved spec, or when the user asks for a spec. Writes only
   draft *.md specs directly in specs/ or <package>/specs/ (hook-enforced); never
   code, plans or approved specs.
-model: opus
+model: sonnet
 effort: high
 maxTurns: 60
 tools: Read, Grep, Glob, Write, Edit, Bash

@@ -97,7 +97,7 @@ async function run() {
     const ms = await loadIndex();
     const results = ms.search(parsed.terms.join(' '), {
       boost: searchBoost,
-      prefix: (term) => term.length > 2,
+      prefix: true,
       fuzzy: (term) => (term.length > 4 ? 0.2 : false),
       combineWith: 'OR',
       filter: (r) => passes(r.id, r.type, r.plugin, r.category),

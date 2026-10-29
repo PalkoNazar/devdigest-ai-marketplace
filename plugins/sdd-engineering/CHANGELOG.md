@@ -5,6 +5,16 @@ a change to the plan format, an agent's input or report format, or a dependency'
 version is a major version. Each release is tagged `sdd-engineering--v<version>`, after
 the tags of the dependency versions it needs.
 
+## 1.1.1 — 2026-10-29
+
+Backward-compatible: no change to any agent's input, output or report format.
+
+### Changed
+
+- `spec-creator` runs on `model: sonnet` instead of `opus` (`effort: high` unchanged).
+  Cost per successful eval run drops from $0.551 to $0.342 (−38%) at the same score; see
+  [docs/COST-BASELINE.md](../../docs/COST-BASELINE.md).
+
 ## 1.1.0 — 2026-10-29
 
 Backward-compatible: the spec template, the plan format and all agent inputs are unchanged.

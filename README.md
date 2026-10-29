@@ -69,6 +69,31 @@ stay enabled next to the `@devdigest-ai-stable` ones, and their skills and agent
 Each release is also tagged `<plugin>--v<version>` (for example `sdd-engineering--v1.1.0`);
 dependency version ranges resolve against these tags.
 
+## Check the active version
+
+Claude Code logs an OpenTelemetry event, `claude_code.plugin_loaded`, for every enabled
+plugin at session start. Its `plugin.version` comes from the plugin's `plugin.json`, so it
+shows which version and channel a session actually loaded. For third-party plugins the
+name and version are redacted unless `OTEL_LOG_TOOL_DETAILS=1` is set.
+
+Run this in the project, with no collector needed (one short haiku request):
+
+```bash
+CLAUDE_CODE_ENABLE_TELEMETRY=1 OTEL_LOGS_EXPORTER=console OTEL_METRICS_EXPORTER=none OTEL_LOG_TOOL_DETAILS=1 \
+  claude -p "Reply with just: ok" --model haiku --max-turns 1 2>&1 \
+  | grep -A8 '"plugin_loaded"' | grep -E '"(plugin\.name|marketplace\.name|plugin\.version)"' | paste - - - | grep devdigest
+```
+
+After a rollback to the stable channel it prints, among others:
+
+```
+"plugin.name": "sdd-engineering"   "marketplace.name": "devdigest-ai-stable"   "plugin.version": "1.0.0"
+```
+
+To send the same events to a collector instead, set `OTEL_LOGS_EXPORTER=otlp` and
+`OTEL_EXPORTER_OTLP_ENDPOINT`; see [Monitoring](https://code.claude.com/docs/en/monitoring-usage).
+`claude plugin list --json` shows what is installed; this event shows what a session loaded.
+
 ## Share with a team
 
 To register the marketplace for everyone in a project, run this in the project once and

@@ -4,6 +4,8 @@ Each plugin keeps its own `CHANGELOG.md`; this file lists releases across the ma
 
 ## 2026-10-29
 
+- [sdd-engineering 1.1.0](plugins/sdd-engineering/CHANGELOG.md)
+- hello-world 0.2.0 (below)
 - [engineering-paved-path 1.0.0](plugins/engineering-paved-path/CHANGELOG.md)
 - [research-tools 1.0.0](plugins/research-tools/CHANGELOG.md)
 - [architecture-review 1.0.0](plugins/architecture-review/CHANGELOG.md)

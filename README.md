@@ -42,6 +42,29 @@ Auto-update is off by default for third-party marketplaces. To turn it on, open 
 go to **Marketplaces**, select `devdigest-ai`, and choose **Enable auto-update**.
 To update manually, run `/plugin marketplace update devdigest-ai`.
 
+## Release channels
+
+| Channel | Branch | Marketplace name | Add it with |
+| :- | :- | :- | :- |
+| latest | `main` | `devdigest-ai` | `PalkoNazar/devdigest-ai-marketplace` |
+| stable | `stable` | `devdigest-ai-stable` | `PalkoNazar/devdigest-ai-marketplace#stable` |
+
+`stable` holds only releases that passed their evals; today that is `sdd-engineering`
+1.0.0 with its 1.0.0 dependencies. A release reaches `stable` after its eval suite is
+green on `main`: fast-forward or merge the release commit into `stable`, keeping
+`name: devdigest-ai-stable` in its `marketplace.json`.
+
+To roll a project back to the stable release, swap the marketplace and the plugin ids:
+
+```bash
+claude plugin marketplace add PalkoNazar/devdigest-ai-marketplace#stable --scope project
+claude plugin uninstall sdd-engineering@devdigest-ai --scope project
+claude plugin install sdd-engineering@devdigest-ai-stable --scope project
+```
+
+Each release is also tagged `<plugin>--v<version>` (for example `sdd-engineering--v1.1.0`);
+dependency version ranges resolve against these tags.
+
 ## Share with a team
 
 To register the marketplace for everyone in a project, run this in the project once and
